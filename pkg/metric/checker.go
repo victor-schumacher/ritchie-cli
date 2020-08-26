@@ -17,28 +17,37 @@
 package metric
 
 import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+
 	"github.com/ZupIT/ritchie-cli/pkg/stream"
 )
 
 type CheckManager struct {
-	file stream.FileReadExister
+	file       stream.FileWriteReadExister
+	metricsCmd *cobra.Command
 }
 
-func NewChecker(file stream.FileReadExister) CheckManager {
-	return CheckManager{file: file}
+func NewChecker(file stream.FileWriteReadExister, metricsCmd *cobra.Command) CheckManager {
+	return CheckManager{
+		file:       file,
+		metricsCmd: metricsCmd,
+	}
 }
 
 func (c CheckManager) Check() bool {
 	if !c.file.Exists(FilePath) {
-		return false
+		fmt.Println("jeu")
+		_ = c.metricsCmd.Execute()
 	}
 
-	bytes, err := c.file.Read(FilePath)
+	fileBytes, err := c.file.Read(FilePath)
 	if err != nil {
 		return false
 	}
 
-	if string(bytes) == "no" {
+	if string(fileBytes) == "no" {
 		return false
 	}
 

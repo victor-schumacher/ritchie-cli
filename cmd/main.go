@@ -59,7 +59,7 @@ func main() {
 	rootCmd := buildCommands()
 	err := rootCmd.Execute()
 	if err != nil {
-		sendMetric(err.Error())
+		 sendMetric(err.Error())
 		_, _ = fmt.Fprintf(os.Stderr, "Error: %+v\n", err)
 		os.Exit(1)
 	}
@@ -252,7 +252,10 @@ func buildCommands() *cobra.Command {
 }
 
 func sendMetric(err ...string) {
-	metricEnable := metric.NewChecker(stream.NewFileManager())
+	metricEnable := metric.NewChecker(
+		stream.NewFileManager(), cmd.NewMetricsCmd(
+			stream.NewFileManager(), prompt.NewSurveyList()),
+		)
 	if metricEnable.Check() {
 		var collectData metric.APIData
 		metricManager := metric.NewHttpSender(metric.ServerRestURL, http.DefaultClient)

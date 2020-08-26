@@ -29,6 +29,8 @@ var (
 	FilePath      = filepath.Join(api.RitchieHomeDir(), "metrics")
 )
 
+const AcceptQuestion = "You want to send anonymous data about the product, feature use, statistics and crash reports?"
+
 type Id string
 
 func (i Id) String() string {
