@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"os/user"
 	"runtime"
@@ -54,6 +55,7 @@ func (do DockerManager) Build(formulaPath, dockerImg string) error {
 	var stderr bytes.Buffer
 	cmd := exec.Command("docker", args...)
 	cmd.Stderr = &stderr
+	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
 		if stderr.Bytes() != nil {
 			prompt.Error(stderr.String())
